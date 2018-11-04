@@ -17,6 +17,6 @@ install:
 - npm install
 script:
 - hexo clean
-- hexo generate && rsync -az -vv --delete -e 'ssh -o stricthostkeychecking=no' public/ ubuntu@kasswang.cn:/var/www/wiki
+- hexo generate && rsync -az -vv --delete -e 'ssh' public/ ubuntu@kasswang.cn:~/test
 addons:
   ssh_known_hosts: kasswang.cn

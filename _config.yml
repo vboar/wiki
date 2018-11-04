@@ -3,19 +3,19 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
-subtitle:
-description:
-keywords:
-author: John Doe
-language:
-timezone:
+title: KassWiki
+subtitle: 卡斯奈的维基百科
+description:  Talk is cheap. Show me the code.
+keywords: KassCraft, KassWiki
+author: 卡斯奈
+language: zh-CN
+timezone: Asia/Shanghai
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
+url: https://kasswang.cn
 root: /
-permalink: :year/:month/:day/:title/
+permalink: posts/:title/
 permalink_defaults:
 
 # Directory
@@ -73,9 +73,24 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type:
+
+feed:
+  type: atom
+  path: atom.xml
+  limit: 20
+  hub:
+  content:
+  content_limit: 140
+  content_limit_delim: ' '
+
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 10000

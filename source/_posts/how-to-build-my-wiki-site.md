@@ -90,3 +90,8 @@ sudo nginx
   sudo certbot renew --dry-run
   ```
   证书自动续期一般不用我们操作，cerbot每两天检查一次。
+
+## 2. 使用Hexo
+
+[Hexo]()是一个流行的静态博客系统，支持Markdown语法。一般的写作流程是这样的：使用Markdown语法完成写作后，运行Hexo命令生成静态页面，然后将静态页面部署到服务器上。
+

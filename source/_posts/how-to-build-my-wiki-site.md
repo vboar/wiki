@@ -95,3 +95,62 @@ sudo nginx
 
 [Hexo]()是一个流行的静态博客系统，支持Markdown语法。一般的写作流程是这样的：使用Markdown语法完成写作后，运行Hexo命令生成静态页面，然后将静态页面部署到服务器上。
 
+先在Github上创建一个wiki仓库，如[vboar/wiki](https://github.com/vboar/wiki)，用于存储wiki系统的source，拉到本地。
+
+确保node环境正常，全局安装hexo-cli，然后初始化项目：
+```
+cnpm install hexo-cli -g
+hexo init wiki
+cd wiki
+cnpm install
+hexo server
+```
+
+安装[Next](https://github.com/theme-next/hexo-theme-next)主题：
+```
+git clone https://github.com/theme-next/hexo-theme-next themes/next
+
+# 主题作为Git子模块引用，以便主题更新
+git submodule add https://github.com/theme-next/hexo-theme-next themes/next
+```
+
+配置文件：
+- 项目的配置在：./_config.yml
+- 主题的配置在：./source/_data/next.yml
+
+配置好.gitignore，只提交源代码，不提交build的产物和其他不必要的文件。
+
+然后就可以愉快地开始写文章了。
+
+## 使用Travis CI
+
+写完文章后，我们就可以提交到Github上，然后怎么部署到我们的服务器上呢？在本地构建好拷贝到服务器？利用Github的Webhook自己实现拉取代码到服务器然后构建？不，使用[Travis CI](https://www.travis-ci.org/)可以快速地帮助我们实现持续集成和部署，每提交一次代码，就自动构建一次，然后服务器自动拉取构建产物，就实现自动部署了。
+
+首先需要到Travis CI网站上，开启该项目的持续集成。
+
+.travis.yml如下：
+```yml
+language: node_js
+node_js:
+- stable
+branches:
+  only:
+  - master
+before_install:
+- git config --global user.name "vboar"
+- git config --global user.email "vboar@live.com"
+- openssl aes-256-cbc -K $encrypted_ffa94ce55f12_key -iv $encrypted_ffa94ce55f12_iv -in .travis/id_rsa.enc -out ~/.ssh/id_rsa -d
+- chmod 600 ~/.ssh/id_rsa
+- eval $(ssh-agent)
+- ssh-add ~/.ssh/id_rsa
+- cp .travis/ssh_config ~/.ssh/config
+- git clone https://github.com/theme-next/hexo-theme-next themes/next
+install:
+- npm install hexo-cli -g
+- npm install 
+script:
+- hexo clean
+- hexo generate && rsync -az -vv --delete -e 'ssh' public/ ubuntu@kasswang.cn:/var/www/wiki
+addons:
+  ssh_known_hosts: kasswang.cn
+```
